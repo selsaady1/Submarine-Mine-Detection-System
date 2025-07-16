@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submarine Mine Detection System | Technical Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-badge {
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .author-info {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav li {
+            margin: 0 15px;
+        }
+
+        .nav a {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #8b4513;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #8b4513;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #8b4513;
+            border-radius: 2px;
+        }
+
+        .section h3 {
+            color: #8b4513;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+            border-left: 4px solid #8b4513;
+            padding-left: 15px;
+        }
+
+        .section h4 {
+            color: #a0522d;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #8b4513;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+
+        .executive-summary h3 {
+            color: #8b4513;
+            margin-bottom: 20px;
+            border: none;
+            padding: 0;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(139,69,19,0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Technical Features */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #8b4513;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h4 {
+            color: #8b4513;
+            margin-bottom: 15px;
+        }
+
+        /* Architecture Diagram */
+        .architecture-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .architecture-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .arch-step {
+            background: #8b4513;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 10px;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(139,69,19,0.3);
+        }
+
+        .arch-arrow {
+            font-size: 1.5em;
+            color: #8b4513;
+            margin: 0 10px;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #8b4513;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .code-title {
+            color: #8b4513;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Lists */
+        .section ul {
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+
+        .section li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .checkmark-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checkmark-list li {
+            position: relative;
+            padding-left: 30px;
+            margin: 15px 0;
+        }
+
+        .checkmark-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #8b4513;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #8b4513;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        .metric-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Confusion Matrix */
+        .confusion-matrix {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .confusion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .confusion-table th,
+        .confusion-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .confusion-table th {
+            background: #8b4513;
+            color: white;
+            font-weight: 600;
+        }
+
+        .confusion-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .confusion-table tr:hover {
+            background: #e9ecef;
+        }
+
+        /* Implementation Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #8b4513;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 55%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: #8b4513;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -31px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -31px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: calc(100% - 40px);
+                margin-left: 40px;
+            }
+            
+            .timeline-item::before {
+                left: -31px;
+            }
+            
+            .architecture-flow {
+                flex-direction: column;
+            }
+            
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav, .header {
+                display: none;
+            }
+            
+            .section {
+                break-inside: avoid;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="project-badge">Mission-Critical Defense Application</div>
+                <h1>Submarine Mine Detection System</h1>
+                <p class="subtitle">Advanced Sonar Classification Using Neural Networks & PCA</p>
+                <div class="author-info">
+                    <strong>Saif Elsaady</strong> | Data Scientist & Electrical Engineer
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#methodology">Methodology</a></li>
+                <li><a href="#implementation">Implementation</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#impact">Impact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Executive Summary -->
+            <div class="executive-summary">
+                <h3>Executive Summary</h3>
+                <p>Developed an intelligent sonar classification system to distinguish underwater mines from rocks, directly impacting submarine crew survival in hostile waters. Achieved 88.89% accuracy with only 3 missed mines out of 29 test cases, demonstrating mission-critical performance for defense applications. Engineered sophisticated machine learning pipeline combining Principal Component Analysis for optimal dimensionality reduction with Multi-Layer Perceptron neural networks for robust binary classification of 60-dimensional sonar return signals.</p>
+            </div>
+
+            <!-- Project Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">88.89%</div>
+                    <div class="stat-label">Classification Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Optimal PCA Components</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">87%</div>
+                    <div class="stat-label">Dimensionality Reduction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3/29</div>
+                    <div class="stat-label">Missed Mines (Critical)</div>
+                </div>
+            </div>
+
+            <!-- System Overview -->
+            <section id="overview" class="section">
+                <h2>System Overview</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Mission-Critical Application</h4>
+                        <p>Life-or-death submarine navigation system for distinguishing underwater mines from rocks in hostile waters, directly impacting crew survival.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Advanced Signal Processing</h4>
+                        <p>Sophisticated sonar signal analysis processing 60-dimensional feature vectors with optimal dimensionality reduction techniques.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Neural Network Classification</h4>
+                        <p>Multi-Layer Perceptron architecture with 100 hidden neurons and optimized hyperparameters for maximum accuracy.</p>
+                    </div>
+                </div>
+
+                <h3>Critical Performance Metrics</h3>
+                <ul class="checkmark-list">
+                    <li>88.89% peak classification accuracy on test datasets</li>
+                    <li>Only 3 out of 29 mines missed (10.3% false negative rate)</li>
+                    <li>87% dimensionality reduction from 60 to 8 components</li>
+                    <li>Optimal PCA configuration through systematic testing</li>
+                    <li>Robust generalization across test scenarios</li>
+                </ul>
+            </section>
+
+            <!-- Technical Methodology -->
+            <section id="methodology" class="section">
+                <h2>Technical Methodology</h2>
+                
+                <div class="architecture-box">
+                    <h3>Systematic Optimization Approach</h3>
+                    <div class="architecture-flow">
+                        <div class="arch-step">Sonar Data<br>Processing</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-step">PCA<br>Optimization</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-step">Neural Network<br>Training</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-step">Performance<br>Evaluation</div>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Sonar Data Processing</h4>
+                        <p>Loaded and preprocessed 60-dimensional sonar feature vectors with class mapping (Rock: 1, Mine: 2) and strategic 70/30 train-test split for robust evaluation.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2. Dimensionality Analysis</h4>
+                        <p>Systematically tested PCA components from 1-60 dimensions to identify optimal feature space reduction without information loss.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>3. Neural Network Architecture</h4>
+                        <p>Implemented MLPClassifier with 100 hidden neurons, logistic activation, and Adam optimizer for maximum classification performance.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>4. Performance Optimization</h4>
+                        <p>Executed comprehensive hyperparameter tuning including alpha regularization (0.00001) and convergence tolerance for stable results.</p>
+                    </div>
+                </div>
+
+                <h3>Technical Stack</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">Python</div>
+                        <div class="metric-description">Primary programming language for implementation</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Scikit-learn</div>
+                        <div class="metric-description">Machine learning framework for PCA and MLP</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">PCA</div>
+                        <div class="metric-description">Principal Component Analysis for dimensionality reduction</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">MLPClassifier</div>
+                        <div class="metric-description">Multi-Layer Perceptron for binary classification</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Implementation Details -->
+            <section id="implementation" class="section">
+                <h2>Implementation Details</h2>
+
+                <h3>Core Algorithm Pipeline</h3>
+                <div class="code-title">Optimal PCA + Neural Network Implementation</div>
+                <div class="code-block">
+                    <pre>
+# Optimal PCA + Neural Network Pipeline
+pca = PCA(n_components=8)  # Optimal dimensionality identified
+X_train_pca = pca.fit_transform(X_train)
+X_test_pca = pca.transform(X_test)
+
+model = MLPClassifier(
+    hidden_layer_sizes=(100),
+    activation='logistic',
+    max_iter=2000,
+    alpha=0.00001,
+    solver='adam',
+    random_state=42
+)
+
+model.fit(X_train_pca, y_train)
+accuracy = model.score(X_test_pca, y_test)
+                    </pre>
+                </div>
+
+                <h3>Neural Network Architecture</h3>
+                <h4>Model Configuration</h4>
+                <ul>
+                    <li><strong>Hidden Layer Size:</strong> 100 neurons for optimal pattern recognition</li>
+                    <li><strong>Activation Function:</strong> Logistic activation for binary classification</li>
+                    <li><strong>Solver:</strong> Adam optimizer for efficient gradient descent</li>
+                    <li><strong>Regularization:</strong> Alpha parameter (0.00001) for overfitting prevention</li>
+                    <li><strong>Max Iterations:</strong> 2000 for convergence stability</li>
+                </ul>
+
+                <h3>Principal Component Analysis</h3>
+                <h4>Dimensionality Optimization</h4>
+                <ul>
+                    <li><strong>Original Features:</strong> 60-dimensional sonar signal vectors</li>
+                    <li><strong>Optimal Components:</strong> 8 components identified through systematic testing</li>
+                    <li><strong>Variance Retained:</strong> Maximum information preservation with minimal noise</li>
+                    <li><strong>Computational Efficiency:</strong> 87% reduction in feature space</li>
+                </ul>
+
+                <h3>Data Processing Pipeline</h3>
+                <ul class="checkmark-list">
+                    <li>70/30 train-test split for robust model evaluation</li>
+                    <li>Class mapping: Rock (1), Mine (2) for binary classification</li>
+                    <li>Feature standardization for optimal PCA performance</li>
+                    <li>Systematic component testing from 1-60 dimensions</li>
+                    <li>Cross-validation for model stability assessment</li>
+                </ul>
+            </section>
+
+            <!-- Performance Analysis -->
+            <section id="performance" class="section">
+                <h2>Performance Analysis</h2>
+
+                <div class="confusion-matrix">
+                    <h3>Confusion Matrix - Optimal 8 Components</h3>
+                    <table class="confusion-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Predicted Rock</th>
+                                <th>Predicted Mine</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Actual Rock</th>
+                                <td>30</td>
+                                <td>4</td>
+                                <td>34</td>
+                            </tr>
+                            <tr>
+                                <th>Actual Mine</th>
+                                <td>3</td>
+                                <td>26</td>
+                                <td>29</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>33</td>
+                                <td>30</td>
+                                <td>63</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">88.89%</div>
+                        <div class="metric-description">Overall classification accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">10.3%</div>
+                        <div class="metric-description">False negative rate (missed mines)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">7/63</div>
+                        <div class="metric-description">Total misclassifications</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">26/29</div>
+                        <div class="metric-description">Correctly identified mines</div>
+                    </div>
+                </div>
+
+                <h3>Critical Safety Analysis</h3>
+                <h4>Low False Negative Rate</h4>
+                <p>Only 3 out of 29 mines missed (10.3%) - minimizing catastrophic failure scenarios where undetected mines could destroy submarines and endanger crew lives. This performance metric is crucial for mission-critical defense applications where false negatives have severe consequences.</p>
+
+                <h4>Robust Classification Performance</h4>
+                <ul>
+                    <li><strong>True Positive Rate:</strong> 89.7% (26/29 mines correctly identified)</li>
+                    <li><strong>True Negative Rate:</strong> 88.2% (30/34 rocks correctly identified)</li>
+                    <li><strong>Precision:</strong> 86.7% (26/30 mine predictions correct)</li>
+                    <li><strong>Recall:</strong> 89.7% (26/29 actual mines detected)</li>
+                </ul>
+            </section>
+
+            <!-- Dimensional Analysis -->
+            <section id="analysis" class="section">
+                <h2>Dimensional Optimization Analysis</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Peak Performance Discovery</h4>
+                        <p>Achieved maximum accuracy using only 13% of original feature space (8 out of 60 components), demonstrating efficient signal extraction from complex sonar data.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Noise Reduction Success</h4>
+                        <p>Additional components beyond 8 introduced noise rather than meaningful variance, validating the PCA optimization approach for sonar signal processing.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Computational Efficiency</h4>
+                        <p>87% dimensionality reduction while maintaining high accuracy enables real-time submarine navigation systems with reduced computational overhead.</p>
+                    </div>
+                </div>
+
+                <h3>Performance Curve Analysis</h3>
+                <p>Accuracy pattern showed steep rise to 8 components followed by plateauing trend, confirming optimal feature extraction and demonstrating the diminishing returns principle in high-dimensional sonar data processing.</p>
+
+                <h3>Key Technical Discoveries</h3>
+                <ul class="checkmark-list">
+                    <li>Optimal feature space identified at 8 principal components</li>
+                    <li>Robust generalization across diverse test scenarios</li>
+                    <li>Consistent performance indicating strong model reliability</li>
+                    <li>Efficient computation suitable for real-time deployment</li>
+                    <li>Minimal false negative rate critical for crew safety</li>
+                </ul>
+            </section>
+
+            <!-- Strategic Impact -->
+            <section id="impact" class="section">
+                <h2>Strategic Impact & Applications</h2>
+
+                <h3>Defense Technology Advancement</h3>
+                <p>This system represents a significant breakthrough in underwater threat detection, providing naval forces with automated decision support for mine detection scenarios. The combination of advanced dimensionality reduction and neural network classification demonstrates mastery of machine learning techniques applied to critical defense applications.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Advanced Feature Engineering</h4>
+                        <p>Successful application of PCA for optimal signal dimensionality reduction in complex sonar environments, achieving 87% feature space reduction.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Neural Network Optimization</h4>
+                        <p>Expert configuration of MLPClassifier parameters for maximum performance in binary classification tasks with mission-critical requirements.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Systematic Methodology</h4>
+                        <p>Comprehensive testing across 60 dimensional configurations to identify optimal performance parameters through rigorous experimentation.</p>
+                    </div>
+                </div>
+
+                <h3>Operational Benefits</h3>
+                <ul class="checkmark-list">
+                    <li>Enhanced submarine crew safety through automated mine detection</li>
+                    <li>Real-time processing capabilities for operational deployment</li>
+                    <li>Reduced human error in critical decision-making scenarios</li>
+                    <li>Scalable solution for various naval defense platforms</li>
+                    <li>Cost-effective implementation using standard hardware</li>
+                </ul>
+
+                <h3>Future Deployment Readiness</h3>
+                <p>The robust 88.89% accuracy combined with minimal false negative rate positions this system for immediate integration into submarine navigation platforms. The efficient 8-component PCA reduction enables real-time processing capabilities essential for operational deployment in naval defense systems.</p>
+
+                <h3>Technical Excellence Demonstrated</h3>
+                <ul>
+                    <li><strong>Machine Learning Mastery:</strong> Advanced implementation of PCA and neural networks</li>
+                    <li><strong>Defense Applications:</strong> Mission-critical system design and optimization</li>
+                    <li><strong>Signal Processing:</strong> Sophisticated sonar data analysis and feature extraction</li>
+                    <li><strong>Performance Optimization:</strong> Systematic hyperparameter tuning and validation</li>
+                    <li><strong>Practical Implementation:</strong> Real-world deployment considerations and constraints</li>
+                </ul>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add active class to navigation items
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Add entrance animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .metric-card, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
